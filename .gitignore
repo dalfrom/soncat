@@ -52,7 +52,6 @@ pom.xml.versionsBackup
 .bloop
 .metals
 .vscode
-project
 .scala-build
 
 # Custom

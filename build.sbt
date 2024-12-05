@@ -1,7 +1,12 @@
-scalaVersion := "3.5.1"
+ThisBuild / scalaVersion := "3.5.1"
 
-version := "1.0.0"
+ThisBuild / version := "1.0.0"
 
-name := "Soncat"
+ThisBuild / name := "Soncat"
 
-organization := "com.soncat"
+ThisBuild / organization := "com.soncat"
+
+lazy val core = (project in file("core"))
+lazy val server = (project in file("server")).dependsOn(core)
+
+lazy val root = (project in file(".")).aggregate(core, server)
