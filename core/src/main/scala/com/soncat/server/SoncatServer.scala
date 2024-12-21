@@ -1,13 +1,15 @@
 package soncat.server
 
-import soncat.server.Server
 import java.util.concurrent.atomic.{AtomicBoolean}
 import soncat.common.errors._
 import soncat.server.ConnectionHandler
 
 
-trait Configuration {
-    val port: Int
+trait Server {
+    def startup(): Unit
+    def shutdown(): Unit
+    def awaitShutdown(): Unit
+    def forceShutdown(): Unit
 }
 
 object SoncatServer extends Server {
@@ -35,7 +37,7 @@ object SoncatServer extends Server {
             // loadConfiguration()
 
             // Start the server:
-            // To start, the database will be started, as well as with the cache
+            // To start, the database will be started, as well as with the cache and WAL mechanism
             // (Unless configured to do so, anything saved on disk will NOT be loaded into memory. Check configuration on yaml)
             // The server will initialize and start accepting connections
 
@@ -92,9 +94,6 @@ object SoncatServer extends Server {
             }
 
             isShuttingDown.set(true)
-
-            // Ending the connection
-            ConnectionHandler.endConnections()
         }
         catch {
             case e: Exception => {
@@ -105,7 +104,7 @@ object SoncatServer extends Server {
     }
 
     override def awaitShutdown(): Unit = {
-        println("Soncat server is awaiting shutdown...")
+        // Await
     }
 
     override def forceShutdown(): Unit = {

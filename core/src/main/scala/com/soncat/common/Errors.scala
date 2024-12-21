@@ -25,4 +25,15 @@ object errors {
     var ERR_CFG_INVALID_VALUE = "[cfg] Invalid configuration value."
     var ERR_CFG_INVALID_TYPE = "[cfg] Invalid configuration type."
     var ERR_CFG_INVALID_SECTION = "[cfg] Invalid configuration section."
+
+    // Parsing data-related errors
+    var ERR_PARSE_INVALID_DATA = "[parse] Unable to parse due to possible invalid data: "
+
+    // Wal-related errors
+    var ERR_WAL_UNABLE_TO_OPEN = "[wal] Unable to open WAL file or its stream: "
+    var ERR_WAL_UNABLE_TO_CLOSE = "[wal] Unable to close WAL file or its stream: "
+    var ERR_WAL_INVALID_FILE = "[wal] Invalid WAL file."
+    var ERR_WAL_INVALID_FORMAT = "[wal] Invalid WAL format."
+    var ERR_WAL_INVALID_KEY = "[wal] Invalid WAL key."
+    var ERR_WAL_UNWRITABLE = "[wal] Unable to write to WAL file: "
 }

@@ -58,3 +58,9 @@ pom.xml.versionsBackup
 
 # Custom
 _old
+
+# Local WAL Testing
+/wal
+/WAL
+/wal/*
+/WAL/*

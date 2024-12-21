@@ -10,7 +10,8 @@ lazy val core = (project in file("core"))
   .settings(
     name := "core",
     libraryDependencies ++= Seq(
-      "com.lihaoyi" %% "upickle" % "3.1.0"
+      "com.lihaoyi" %% "upickle" % "3.1.0",
+      "com.lihaoyi" %% "os-lib" % "0.9.1"
     )
   )
 
