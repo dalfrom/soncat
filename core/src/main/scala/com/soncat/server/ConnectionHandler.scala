@@ -4,9 +4,10 @@ import java.net.{ServerSocket, Socket}
 
 object ConnectionHandler {
     def startConnector(
-        isRunning: Boolean = true
+        isRunning: Boolean = true,
+        corePort: Int = 3108
     ): Unit = {
-        val port = 3108 // Define the port to listen on
+        val port = corePort // Define the port to listen on
         val serverSocket = new ServerSocket(port)
         println(s"Server started, listening on port $port")
 

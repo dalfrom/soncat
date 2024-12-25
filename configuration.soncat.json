@@ -1,0 +1,17 @@
+{
+	"core": {
+		"port": 3108,
+		"whitelisted_entities": [],
+		"whitelisted_domains": [],
+		"wal": {
+			"enabled": true,
+			"retention_time": 3600,
+			"retention_size": 20,
+			"default_path": "/var/lib/soncat/wal"
+		},
+		"db": {
+			"retention_time": 1296000,
+			"load_on_startup": false
+		}
+	}
+}

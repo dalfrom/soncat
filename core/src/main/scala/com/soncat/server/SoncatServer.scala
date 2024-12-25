@@ -3,6 +3,7 @@ package soncat.server
 import java.util.concurrent.atomic.{AtomicBoolean}
 import soncat.common.errors._
 import soncat.server.ConnectionHandler
+import soncat.io.config.ConfigHandler
 
 
 trait Server {
@@ -34,7 +35,7 @@ object SoncatServer extends Server {
             isStartingUp.set(true)
 
             // Loading configuration from the configuration file
-            // loadConfiguration()
+            val configuration = ConfigHandler.loadConfiguration()
 
             // Start the server:
             // To start, the database will be started, as well as with the cache and WAL mechanism
@@ -46,7 +47,8 @@ object SoncatServer extends Server {
 
             // Starting the server, as everything before it was successfully initialized
             ConnectionHandler.startConnector(
-                isRunning.get()
+                isRunning.get(),
+                configuration.core.port
             )
         }
         catch {
@@ -58,12 +60,6 @@ object SoncatServer extends Server {
                 throw e
             }
         }
-    }
-
-    private def loadConfiguration(): Unit = {
-        // Loading the configuration from the configuration file (yml or json)
-        val fileName = "configuration.soncat"
-        val extensions = List("yml", "yaml", "json")
     }
 
     override def shutdown(): Unit = {

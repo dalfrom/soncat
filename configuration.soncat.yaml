@@ -1,8 +1,0 @@
-core:
-  port: 3108
-  whitelist_entities: "*"
-  whitelist_domains: "*"
-
-db:
-  retention_time: 1296000 # 15 days in seconds (default: 1296000, 15 * 24 * 60 * 60)
-  load_on_startup: false # Load all data from the database in memory on startup (default: false)
