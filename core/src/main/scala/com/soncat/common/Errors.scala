@@ -1,5 +1,6 @@
 package soncat.common
 
+
 object errors {
     // Generic errors
     var ERR_INVALID_ARGUMENT = "Invalid argument."
@@ -19,6 +20,7 @@ object errors {
     var ERR_SRV_SHUTTING_DOWN = "[sys] Error shutting down the soncat server. Awaiting..."
 
     // Configuration-related errors
+    var ERR_CFG_FAILED_TO_LOAD = "[cfg] Failed to load configuration."
     var ERR_CFG_INVALID_FILE = "[cfg] Invalid configuration file."
     var ERR_CFG_INVALID_FORMAT = "[cfg] Invalid configuration format."
     var ERR_CFG_INVALID_KEY = "[cfg] Invalid configuration key."

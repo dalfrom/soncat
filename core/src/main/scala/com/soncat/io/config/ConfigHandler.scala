@@ -2,6 +2,8 @@ package soncat.io.config
 
 import scala.io.Source
 import upickle.default._
+import soncat.common.errors._
+import java.util.Properties
 
 
 case class Config(
@@ -31,7 +33,7 @@ case class DbConfig(
 object ConfigHandler {
 
     private val isProduction = sys.env.getOrElse("ENV", "development") == "production"
-    private val defaultConfigPath = if (isProduction) "/etc/soncat/configuration.soncat.json" else "configuration.soncat.json"
+    private val defaultFileName = "configuration.soncat.json"
     // private var config: Config = null
 
     implicit val walConfigRw: ReadWriter[WalConfig] = macroRW
@@ -41,7 +43,17 @@ object ConfigHandler {
 
     var config: Config = null
 
-    def loadConfiguration(): Config = {
+    def loadConfiguration(properties: Properties): Config = {
+        var configurationPath = properties.getOrDefault("config_path", defaultFileName).toString()
+        if (!configurationPath.endsWith(".json")) {
+            throw new RuntimeException(ERR_CFG_INVALID_FILE)
+        }
+
+        if (configurationPath == null || configurationPath.isEmpty()) {
+            configurationPath = defaultFileName
+        }
+
+        val defaultConfigPath = if (isProduction) "/etc/soncat/configuration.soncat.json" else configurationPath
         try {
             val configFile = Source.fromFile(defaultConfigPath).getLines().mkString
             if (! isAlreadyLoaded()) {
@@ -50,7 +62,7 @@ object ConfigHandler {
             return config
         } catch {
             case e: Exception => {
-                throw new RuntimeException("Failed to load configuration")
+                throw new RuntimeException(s"${ERR_CFG_FAILED_TO_LOAD}${e.getMessage()}")
             }
         }
     }
@@ -61,7 +73,7 @@ object ConfigHandler {
 
     def getConfig(): Config = {
         if (! isAlreadyLoaded()) {
-            config = loadConfiguration()
+            config = loadConfiguration(null)
         }
 
         return config

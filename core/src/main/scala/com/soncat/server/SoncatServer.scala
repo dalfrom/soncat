@@ -4,16 +4,12 @@ import java.util.concurrent.atomic.{AtomicBoolean}
 import soncat.common.errors._
 import soncat.server.ConnectionHandler
 import soncat.io.config.ConfigHandler
+import java.util.Properties
 
 
-trait Server {
-    def startup(): Unit
-    def shutdown(): Unit
-    def awaitShutdown(): Unit
-    def forceShutdown(): Unit
-}
-
-object SoncatServer extends Server {
+class SoncatServer(
+    properties: Properties
+) extends Server {
 
     private val isRunning = new AtomicBoolean(false)
     private val isShuttingDown = new AtomicBoolean(false)
@@ -35,7 +31,9 @@ object SoncatServer extends Server {
             isStartingUp.set(true)
 
             // Loading configuration from the configuration file
-            val configuration = ConfigHandler.loadConfiguration()
+            val configuration = ConfigHandler.loadConfiguration(
+                properties
+            )
 
             // Start the server:
             // To start, the database will be started, as well as with the cache and WAL mechanism
@@ -45,15 +43,22 @@ object SoncatServer extends Server {
             // Setting the system to be running
             isRunning.set(true)
 
+            var port: Int = if (properties.getProperty("port") != null) {
+                properties.getProperty("port").toInt
+            } else {
+                configuration.core.port
+            }
+
+
             // Starting the server, as everything before it was successfully initialized
             ConnectionHandler.startConnector(
                 isRunning.get(),
-                configuration.core.port
+                port
             )
         }
         catch {
             case e: Exception => {
-                println(ERR_SRV_STARTING_UP)
+                println(s"${ERR_SRV_STARTING_UP}${e.getMessage()}")
                 isStartingUp.set(false)
                 shutdown()
 
