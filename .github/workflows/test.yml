@@ -29,4 +29,9 @@ jobs:
           ${{ runner.os }}-sbt-
 
     - name: Run sbt test
-      run: sbt test
+      run: |
+        echo pwd
+        echo $PATH
+        # Run tests
+        /usr/local/bin/sbt test
+        sbt test
