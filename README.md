@@ -8,7 +8,8 @@ sbt reload
 sbt clean compile
 sbt
 project core
-run
+run # To run
+test # To test
 ```
 
 The the socket will start on port 3108
