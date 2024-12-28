@@ -2,7 +2,7 @@ package soncat.server
 
 import java.util.concurrent.atomic.{AtomicBoolean}
 import soncat.common.errors._
-import soncat.server.ConnectionHandler
+import soncat.network.{SocketServer}
 import soncat.io.config.ConfigHandler
 import java.util.Properties
 
@@ -51,7 +51,8 @@ class SoncatServer(
 
 
             // Starting the server, as everything before it was successfully initialized
-            ConnectionHandler.startConnector(
+            val socketServer = new SocketServer()
+            socketServer.startServer(
                 isRunning.get(),
                 port
             )

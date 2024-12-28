@@ -1,16 +1,40 @@
-package soncat.server
+package soncat.network
 
 import java.net.{ServerSocket, Socket}
 import java.io.{InputStream, OutputStream}
 import upickle.default._
 import java.text.DateFormat
+import soncat.server.DataInputHandler
 
 
-class ClientHandler(
-    clientSocket: Socket,
+class SocketServer {
+    def startServer(
+        isRunning: Boolean = true,
+        corePort: Int = 3108
+    ): Unit = {
+        val port = corePort // Define the port to listen on
+        val serverSocket = new ServerSocket(port)
+        println(s"Server started, listening on port $port")
+
+        while (isRunning) {
+            // Accept a client connection
+            val clientSocket = serverSocket.accept()
+            println(s"Client connected: ${clientSocket.getInetAddress}")
+
+            // Handle the client in a separate thread
+            new Thread(
+                new SocketClient(
+                    clientSocket
+                )
+            ).start()
+        }
+    }
+}
+
+class SocketClient(
+    clientSocket: Socket
 ) extends Runnable {
     case class IncomingLogData(
-		// TODO: Understand how we can remove String from here since I want to force only those 5 types
 		`type`: "info" | "error" | "warning" | "success" | "notice" | String,
 		sent_at: String, // General timestamp
 		service: String,
