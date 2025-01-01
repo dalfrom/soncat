@@ -38,4 +38,13 @@ object errors {
     var ERR_WAL_INVALID_FORMAT = "[wal] Invalid WAL format."
     var ERR_WAL_INVALID_KEY = "[wal] Invalid WAL key."
     var ERR_WAL_UNWRITABLE = "[wal] Unable to write to WAL file: "
+
+    // Memtable-related errors
+    var ERR_MEMTABLE_INVALID_SIZE = "[memtable] Invalid size."
+    var ERR_MEMTABLE_INVALID_CONFIG = "[memtable] Invalid configuration."
+    var ERR_MEMTABLE_INVALID_THRESHOLD = "[memtable] Invalid threshold."
+    var ERR_MEMTABLE_INVALID_MAX_KEY_SIZE = "[memtable] Invalid max key size."
+    var ERR_MEMTABLE_INVALID_KEY_COUNT = "[memtable] Invalid key count."
+    var ERR_MEMTABLE_COULD_NOT_FLUSH = "[memtable] Couldn't flush the MemTable: "
+    var ERR_MEMTABLE_COULD_NOT_SAVE = "[memtable] Couldn't save the data to the MemTable: "
 }

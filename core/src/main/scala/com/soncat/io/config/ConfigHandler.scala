@@ -28,6 +28,13 @@ case class WalConfig(
 case class DbConfig(
     retention_time: Int,
     load_on_startup: Boolean,
+    memtable: MemtableConfig,
+)
+
+case class MemtableConfig(
+    trie_max_key_size: Int,
+    trie_max_depth: Int,
+    size_threshold: Int,
 )
 
 object ConfigHandler {
@@ -38,19 +45,25 @@ object ConfigHandler {
 
     implicit val walConfigRw: ReadWriter[WalConfig] = macroRW
     implicit val dbConfigRw: ReadWriter[DbConfig] = macroRW
+    implicit val memtableConfigRw: ReadWriter[MemtableConfig] = macroRW
     implicit val coreConfigRw: ReadWriter[CoreConfig] = macroRW
     implicit val dataRW: ReadWriter[Config] = macroRW
 
     var config: Config = null
 
     def loadConfiguration(properties: Properties): Config = {
-        var configurationPath = properties.getOrDefault("config_path", defaultFileName).toString()
-        if (!configurationPath.endsWith(".json")) {
-            throw new RuntimeException(ERR_CFG_INVALID_FILE)
-        }
+        var configurationPath: String = null
 
-        if (configurationPath == null || configurationPath.isEmpty()) {
-            configurationPath = defaultFileName
+        if (properties != null) {
+            configurationPath = properties.getOrDefault("config_path", defaultFileName).toString()
+            properties.getOrDefault("config_path", defaultFileName).toString()
+            if (!configurationPath.endsWith(".json")) {
+                throw new RuntimeException(ERR_CFG_INVALID_FILE)
+            }
+
+            if (configurationPath == null || configurationPath.isEmpty()) {
+                configurationPath = defaultFileName
+            }
         }
 
         val defaultConfigPath = if (isProduction) "/etc/soncat/configuration.soncat.json" else configurationPath

@@ -1,6 +1,7 @@
 package soncat.server
 
 import soncat.io.wal.WalDirector
+import soncat.db.memtable.{Memtable, TrieMemtable}
 import soncat.common.errors._
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -27,11 +28,9 @@ case class IncomingLogData(
 	payload: String,
 	p_type:  String, // "json" | "csv" | "xml" | anything that can be helpful here...
 )
-case class LogResponseData(data: IncomingLogData)
 
 object DataInputHandler {
 	implicit val rw: ReadWriter[IncomingLogData] = macroRW
-	implicit val logResponseDataRw: ReadWriter[LogResponseData] = macroRW
 	// This file connects ConnectionHandler to WalDirector and all the other classes/services around Soncat
     // It is the (2nd) main entry point for the server to handle incoming data, as the primary entry point is ConnectionHandler
     // This will sort all the data and send it to the appropriate service for processing
@@ -44,19 +43,26 @@ object DataInputHandler {
       * responsibility of the MemTable to handle the data. This class only returns the response
 	*/
 	def handleIncomingData(data: String): Unit = {
-		try {
-			var storageLogData = parseData(data)
-			println("Data parsed: " + storageLogData)
+		// Write the data to the WAL
+		WalDirector.writeToWal(data)
 
-			// Save the data into the WAL
-			WalDirector.writeToWal(data)
-		} catch {
-			case e: Exception => println(s"${ERR_PARSE_INVALID_DATA}${e.getMessage}")
+		var storageLogData: StorageLogData = null
+		try {
+			storageLogData = parseData(data)
 		}
+		catch {
+			case e: Exception => println(s"${ERR_PARSE_INVALID_DATA}${e.getMessage}")
+			return
+		}
+
+		// Write the data to the MemTable
+		val memtable = new Memtable()
+
+		memtable.saveData(storageLogData)
 	}
 
 	def parseData(incData: String): StorageLogData = {
-		val data = read[LogResponseData](incData).data
+		val data = read[IncomingLogData](incData)
 
 		return new StorageLogData(
 			_id = s"sc_${System.currentTimeMillis()}",

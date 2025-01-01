@@ -10,6 +10,11 @@
 			"default_path": "/var/lib/soncat/wal"
 		},
 		"db": {
+			"memtable": {
+				"trie_max_key_size": 128,
+				"trie_max_depth": 10,
+				"size_threshold": 1024
+			},
 			"retention_time": 1296000,
 			"load_on_startup": false
 		}
