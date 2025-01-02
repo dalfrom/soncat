@@ -23,3 +23,8 @@ You can run the core applying custom parameters for your need. Currently 4 param
 - Debug: `--debug` allows for an in-depth logging of the processes of Soncat's core.
 
 An example to this could be `run --port=10 --debug --config-path="./configurations/local.json"`. Only json configuration are supported
+
+
+## Issues and development
+
+[Linear](https://linear.app/) is used for development and issues; it contains a dedicated team for the Soncat repo, so all the commits will reference the Soncat prefix (SNC) followed by the issue incremental number (i.e. SNC-4)
