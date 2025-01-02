@@ -18,13 +18,7 @@ jobs:
         distribution: 'temurin'
         cache: 'sbt'
     - uses: olafurpg/setup-scala@v11
-    - name: Debug SBT
-      run: |
-        which sbt
-        sbt --version
-
     - name: Compile
       run: sbt compile
-
     - name: Test
       run: sbt test
